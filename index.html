@@ -26,79 +26,83 @@
       margin-bottom: 1.5rem;
     }
     table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 1.5rem;
-        background-color: white;
-        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-        table-layout: fixed; /* Ayuda a controlar las proporciones */
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+      background-color: white;
+      box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+      table-layout: fixed;
     }
     th, td {
-        border: 1px solid #e2e8f0;
-        /* Reducimos el padding para que la tabla sea más compacta */
-        padding: 0.5rem 0.25rem;
-        text-align: center;
-        vertical-align: middle;
-        font-size: 0.875rem; /* Reducimos el tamaño de la fuente */
+      border: 1px solid #e2e8f0;
+      padding: 0.5rem 0.25rem;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 0.875rem;
     }
     th {
-        background-color: #f8fafc;
-        font-weight: 600;
-        color: #475569;
+      background-color: #f8fafc;
+      font-weight: 600;
+      color: #475569;
     }
     input[type="text"] {
-        padding: 0.5rem 0.75rem;
-        border: 1px solid #cbd5e1;
-        border-radius: 0.375rem;
-        width: 100%;
-        transition: border-color 0.2s;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.375rem;
+      width: 100%;
+      transition: border-color 0.2s;
     }
     input[type="text"]:focus {
-        outline: none;
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 1px #3b82f6;
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 1px #3b82f6;
     }
     button {
-        padding: 0.5rem 1rem;
-        border-radius: 0.375rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background-color 0.2s;
-        border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      border: none;
     }
     .btn-primary {
-        background-color: #3b82f6;
-        color: white;
+      background-color: #3b82f6;
+      color: white;
     }
     .btn-primary:hover {
-        background-color: #2563eb;
+      background-color: #2563eb;
     }
     .btn-secondary {
-        background-color: #64748b;
-        color: white;
+      background-color: #64748b;
+      color: white;
     }
     .btn-secondary:hover {
-        background-color: #475569;
+      background-color: #475569;
     }
     .btn-control {
-        min-width: 24px; /* Más pequeño */
-        height: 24px;  /* Más pequeño */
-        padding: 0.1rem;
-        font-size: 1rem;
-        line-height: 1;
-        margin: 0 0.2rem;
+      min-width: 24px;
+      height: 24px;
+      padding: 0.1rem;
+      font-size: 1rem;
+      line-height: 1;
+      margin: 0 0.2rem;
     }
     .valor {
-        display: inline-block;
-        width: 25px; /* Más estrecho */
-        font-weight: 500;
-        font-size: 1rem;
+      display: inline-block;
+      width: 25px;
+      font-weight: 500;
+      font-size: 1rem;
     }
-    #stats-container {
-        margin-top: 2rem;
-    }
-    .player-stats-card {
-        transition: all 0.3s ease-in-out;
+
+    /* Ocultar las columnas .25 y .75 en pantallas muy estrechas */
+    @media (max-width: 640px) {
+      th:nth-child(3), th:nth-child(5),
+      th:nth-child(8), th:nth-child(10),
+      th:nth-child(13), th:nth-child(15),
+      td:nth-child(3), td:nth-child(5),
+      td:nth-child(8), td:nth-child(10),
+      td:nth-child(13), td:nth-child(15) {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -106,72 +110,73 @@
 
   <div class="max-w-7xl mx-auto">
     <div class="card">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">Información del Partido</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-                <label for="equipo" class="block text-sm font-medium text-gray-700">Equipo Rival</label>
-                <input type="text" id="equipo" class="mt-1" />
-            </div>
-            <div>
-                <label for="set" class="block text-sm font-medium text-gray-700">Set</label>
-                <input type="text" id="set" class="mt-1" />
-            </div>
-            <div>
-                <label for="ganador" class="block text-sm font-medium text-gray-700">Ganador del Set</label>
-                <input type="text" id="ganador" class="mt-1" />
-            </div>
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">Información del Partido</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label for="equipo" class="block text-sm font-medium text-gray-700">Equipo Rival</label>
+          <input type="text" id="equipo" class="mt-1" />
         </div>
+        <div>
+          <label for="set" class="block text-sm font-medium text-gray-700">Set</label>
+          <input type="text" id="set" class="mt-1" />
+        </div>
+        <div>
+          <label for="ganador" class="block text-sm font-medium text-gray-700">Ganador del Set</label>
+          <input type="text" id="ganador" class="mt-1" />
+        </div>
+      </div>
     </div>
 
     <div class="card">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">Tabla de Estadísticas</h2>
-        <div class="overflow-x-auto">
-            <table id="tabla-estadisticas">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th rowspan="2" style="width: 20%;">Nombre</th>
-                        <th colspan="5">Saque</th>
-                        <th colspan="5">Recepción</th>
-                        <th colspan="5">Ataque</th>
-                    </tr>
-                    <tr>
-                        <th>0</th><th>.25</th><th>.50</th><th>.75</th><th>1</th>
-                        <th>0</th><th>.25</th><th>.50</th><th>.75</th><th>1</th>
-                        <th>0</th><th>.25</th><th>.50</th><th>.75</th><th>1</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody-jugadores">
-                    <!-- Las filas de los jugadores se generan con JavaScript -->
-                </tbody>
-            </table>
-        </div>
-        <div class="mt-4">
-            <button onclick="agregarFila()" class="btn-primary">Agregar jugador</button>
-        </div>
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">Tabla de Estadísticas</h2>
+      <div class="overflow-x-auto">
+        <!-- fuerza un ancho mínimo para scroll en móvil -->
+        <table id="tabla-estadisticas" class="min-w-[800px]">
+          <thead class="bg-gray-50">
+            <tr>
+              <th rowspan="2" style="width: 20%;">Nombre</th>
+              <th colspan="5">Saque</th>
+              <th colspan="5">Recepción</th>
+              <th colspan="5">Ataque</th>
+            </tr>
+            <tr>
+              <th>0</th><th>.25</th><th>.50</th><th>.75</th><th>1</th>
+              <th>0</th><th>.25</th><th>.50</th><th>.75</th><th>1</th>
+              <th>0</th><th>.25</th><th>.50</th><th>.75</th><th>1</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-jugadores">
+            <!-- Se llena con JS -->
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-4">
+        <button onclick="agregarFila()" class="btn-primary">Agregar jugador</button>
+      </div>
     </div>
-    
+
     <!-- Contenedor para los gráficos de estadísticas -->
     <div id="stats-container">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">Estadísticas Individuales (Precisión %)</h2>
-        <div id="charts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Los gráficos de los jugadores se insertan aquí -->
-        </div>
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">Estadísticas Individuales (Precisión %)</h2>
+      <!-- grid responsive: 1 en móvil, 2 en sm, 3 en lg -->
+      <div id="charts-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Gráficos generados por JS -->
+      </div>
     </div>
 
     <div class="card mt-6">
       <h2 class="text-2xl font-bold text-gray-800 mb-4">Acciones</h2>
       <div class="flex space-x-4">
-          <button onclick="registrarSet()" class="btn-primary">Registrar Set</button>
-          <button onclick="descargarCSV()" class="btn-secondary">Descargar CSV</button>
+        <button onclick="registrarSet()" class="btn-primary">Registrar Set</button>
+        <button onclick="descargarCSV()" class="btn-secondary">Descargar CSV</button>
       </div>
     </div>
   </div>
 
   <script>
     const setsRegistrados = [];
-    let playerCharts = []; // Array para mantener las instancias de los gráficos
+    let playerCharts = [];
 
-    // Función para generar las celdas de estadísticas para una fila de jugador
     function generarCeldas(rowIndex) {
       let celdas = '';
       for (let i = 0; i < 15; i++) {
@@ -187,15 +192,14 @@
       return celdas;
     }
 
-    // Función para agregar una nueva fila de jugador y su gráfico correspondiente
     function agregarFila() {
       const tbody = document.getElementById("tbody-jugadores");
       const rowIndex = tbody.rows.length;
       const fila = document.createElement("tr");
-      
+
       fila.innerHTML = `
         <td>
-            <input type="text" placeholder="Nombre Jugador" oninput="actualizarNombreGrafico(${rowIndex}, this.value)" />
+          <input type="text" placeholder="Nombre Jugador" oninput="actualizarNombreGrafico(${rowIndex}, this.value)" />
         </td>
         ${generarCeldas(rowIndex)}
       `;
@@ -203,11 +207,12 @@
 
       const chartsGrid = document.getElementById("charts-grid");
       const chartContainer = document.createElement("div");
-      chartContainer.className = "player-stats-card card";
+      // w-full h-64 para que el canvas se ajuste
+      chartContainer.className = "player-stats-card card w-full h-64";
       chartContainer.id = `chart-container-${rowIndex}`;
       chartContainer.innerHTML = `
         <h3 id="chart-title-${rowIndex}" class="text-lg font-bold text-center mb-2">Jugador ${rowIndex + 1}</h3>
-        <canvas id="player-chart-${rowIndex}"></canvas>
+        <canvas id="player-chart-${rowIndex}" class="w-full h-full"></canvas>
       `;
       chartsGrid.appendChild(chartContainer);
 
@@ -215,186 +220,124 @@
     }
 
     function actualizarNombreGrafico(rowIndex, nombre) {
-        const chartTitle = document.getElementById(`chart-title-${rowIndex}`);
-        if (chartTitle) {
-            chartTitle.textContent = nombre || `Jugador ${rowIndex + 1}`;
-        }
+      const chartTitle = document.getElementById(`chart-title-${rowIndex}`);
+      chartTitle.textContent = nombre || `Jugador ${rowIndex + 1}`;
     }
 
     function actualizarValor(boton, cambio, rowIndex) {
       const valorSpan = boton.parentNode.querySelector('.valor');
       let valor = parseInt(valorSpan.textContent);
-      valor += cambio;
-      if (valor < 0) valor = 0;
+      valor = Math.max(0, valor + cambio);
       valorSpan.textContent = valor;
       crearOActualizarGrafico(rowIndex);
     }
 
-    // Función principal para crear o actualizar un gráfico de jugador con porcentajes de precisión
     function crearOActualizarGrafico(rowIndex) {
       const fila = document.getElementById("tbody-jugadores").rows[rowIndex];
       if (!fila) return;
 
       const valores = [...fila.querySelectorAll('.valor')].map(v => parseInt(v.textContent));
-      
-      const actionWeights = [0, 0.25, 0.50, 0.75, 1];
+      const pesos = [0, 0.25, 0.50, 0.75, 1];
 
-      // Función helper para calcular la precisión de una categoría de acción
-      function calculatePrecision(actionValues) {
-          const totalActions = actionValues.reduce((sum, count) => sum + count, 0);
-          if (totalActions === 0) {
-              return 0;
-          }
-          const weightedSum = actionValues.reduce((sum, count, index) => {
-              return sum + (count * actionWeights[index]);
-          }, 0);
-          // La precisión es la media ponderada, multiplicada por 100 para ser un porcentaje
-          return (weightedSum / totalActions) * 100;
-      }
-
-      const precisionSaque = calculatePrecision(valores.slice(0, 5));
-      const precisionRecepcion = calculatePrecision(valores.slice(5, 10));
-      const precisionAtaque = calculatePrecision(valores.slice(10, 15));
+      const calcPrec = arr => {
+        const total = arr.reduce((a,b)=>a+b,0);
+        if (!total) return 0;
+        const suma = arr.reduce((s,c,i)=>s + c*pesos[i], 0);
+        return (suma/total)*100;
+      };
 
       const data = {
-        labels: ['Saque', 'Recepción', 'Ataque'],
+        labels: ['Saque','Recepción','Ataque'],
         datasets: [{
           label: 'Precisión (%)',
-          data: [precisionSaque, precisionRecepcion, precisionAtaque],
-          backgroundColor: [
-            'rgba(59, 130, 246, 0.7)',  // Azul
-            'rgba(16, 185, 129, 0.7)', // Verde
-            'rgba(239, 68, 68, 0.7)'    // Rojo
-          ],
-          borderColor: [
-            'rgb(59, 130, 246)',
-            'rgb(16, 185, 129)',
-            'rgb(239, 68, 68)'
-          ],
-          borderWidth: 1
+          data: [
+            calcPrec(valores.slice(0,5)),
+            calcPrec(valores.slice(5,10)),
+            calcPrec(valores.slice(10,15))
+          ]
         }]
       };
 
       const ctx = document.getElementById(`player-chart-${rowIndex}`).getContext('2d');
-
-      const chartOptions = {
-          scales: {
-            y: {
-              beginAtZero: true,
-              min: 0,
-              max: 100, // El eje Y ahora va de 0 a 100
-              ticks: {
-                  stepSize: 25,
-                  // Formatea los ticks del eje para que muestren el símbolo '%'
-                  callback: function(value) {
-                      return value + '%'
-                  }
-              }
-            }
-          },
-          responsive: true,
-          maintainAspectRatio: true,
-          plugins: {
-              legend: {
-                  display: true,
-                  position: 'top',
-              },
-              // Personaliza el tooltip para mostrar el porcentaje con decimales
-              tooltip: {
-                  callbacks: {
-                      label: function(context) {
-                          let label = context.dataset.label || '';
-                          if (label) {
-                              label += ': ';
-                          }
-                          if (context.parsed.y !== null) {
-                              label += context.parsed.y.toFixed(2) + '%';
-                          }
-                          return label;
-                      }
-                  }
-              }
+      const opts = {
+        responsive: true,
+        maintainAspectRatio: false,   // <-- desactivado
+        scales: {
+          y: {
+            beginAtZero: true,
+            min: 0,
+            max: 100,
+            ticks: { stepSize: 25, callback: v => v + '%' }
           }
-        };
+        },
+        plugins: {
+          legend: { display: true, position: 'top' },
+          tooltip: {
+            callbacks: {
+              label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)}%`
+            }
+          }
+        }
+      };
 
       if (playerCharts[rowIndex]) {
         playerCharts[rowIndex].data = data;
-        playerCharts[rowIndex].options = chartOptions;
+        playerCharts[rowIndex].options = opts;
         playerCharts[rowIndex].update();
       } else {
-        playerCharts[rowIndex] = new Chart(ctx, {
-          type: 'bar',
-          data: data,
-          options: chartOptions
-        });
+        playerCharts[rowIndex] = new Chart(ctx, { type: 'bar', data, options: opts });
       }
     }
 
     function registrarSet() {
-      const equipo = document.getElementById("equipo").value.trim() || "equipo";
-      const set = document.getElementById("set").value.trim() || "sin_set";
+      const equipo  = document.getElementById("equipo").value.trim() || "equipo";
+      const set     = document.getElementById("set").value.trim()    || "sin_set";
       const ganador = document.getElementById("ganador").value.trim();
-      
-      if (!equipo || !set || !ganador) {
-          alert("Por favor, complete los campos de Equipo, Set y Ganador.");
-          return;
-      }
+      if (!ganador) return alert("Complete Ganador del Set.");
 
       const filas = document.querySelectorAll('#tbody-jugadores tr');
-      if (filas.length === 0) {
-          alert("Agregue al menos un jugador para registrar el set.");
-          return;
-      }
+      if (!filas.length) return alert("Agrega al menos un jugador.");
 
-      const datosSet = [`Set: ${set} | Ganador: ${ganador}`];
-      datosSet.push("Nombre,S0,S.25,S.50,S.75,S1,R0,R.25,R.50,R.75,R1,A0,A.25,A.50,A.75,A1");
-
-      filas.forEach(fila => {
-        const nombre = fila.querySelector('input').value.trim() || 'Jugador Anónimo';
-        const valores = [...fila.querySelectorAll('.valor')].map(v => v.textContent);
-        datosSet.push(`${nombre},${valores.join(',')}`);
+      const contenido = [`Set: ${set} | Ganador: ${ganador}`,
+        "Nombre,S0,S.25,S.50,S.75,S1,R0,R.25,R.50,R.75,R1,A0,A.25,A.50,A.75,A1"];
+      filas.forEach(f => {
+        const nombre = f.querySelector('input').value.trim() || 'Jugador Anónimo';
+        const vals   = [...f.querySelectorAll('.valor')].map(v=>v.textContent);
+        contenido.push(`${nombre},${vals.join(',')}`);
       });
 
-      setsRegistrados.push({ equipo, contenido: datosSet });
-      alert(`Set ${set} registrado exitosamente.`);
+      setsRegistrados.push({ equipo, contenido });
+      alert(`Set ${set} registrado.`);
       limpiarParaNuevoSet();
     }
-    
+
     function limpiarParaNuevoSet() {
-        document.getElementById("set").value = "";
-        document.getElementById("ganador").value = "";
-        document.getElementById('tbody-jugadores').innerHTML = '';
-        document.getElementById('charts-grid').innerHTML = '';
-        playerCharts = [];
-        agregarFila(); 
+      document.getElementById("set").value = "";
+      document.getElementById("ganador").value = "";
+      document.getElementById("tbody-jugadores").innerHTML = "";
+      document.getElementById("charts-grid").innerHTML = "";
+      playerCharts = [];
+      agregarFila();
     }
 
     function descargarCSV() {
-      if (setsRegistrados.length === 0) {
-        alert("No hay sets registrados para descargar.");
-        return;
-      }
-
+      if (!setsRegistrados.length) return alert("No hay sets registrados.");
       const equipo = document.getElementById("equipo").value.trim() || "estadisticas";
-      let contenido = `Estadísticas para el equipo: ${equipo}\n\n`;
-
-      setsRegistrados.forEach((set, i) => {
-        contenido += `${set.contenido.join('\n')}\n\n-------------------------\n\n`;
+      let txt = `Estadísticas para el equipo: ${equipo}\n\n`;
+      setsRegistrados.forEach(s => {
+        txt += s.contenido.join("\n") + "\n\n-------------------------\n\n";
       });
-
-      const blob = new Blob([contenido], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", `${equipo.replace(/\s+/g, "_").toLowerCase()}_estadisticas.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      const blob = new Blob([txt], { type: 'text/csv;charset=utf-8;' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement("a");
+      a.href     = url;
+      a.download = `${equipo.replace(/\s+/g,'_').toLowerCase()}_estadisticas.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
     }
 
-    window.onload = function() {
-        agregarFila();
-    };
+    window.onload = agregarFila;
   </script>
 </body>
 </html>
