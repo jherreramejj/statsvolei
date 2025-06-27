@@ -4,148 +4,244 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Estadísticas Voleibol (Mobile Controls)</title>
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body { background:#f0f2f5; font-family:sans-serif }
-    .card { background:#fff; border-radius:.75rem; padding:1.5rem; margin-bottom:1.5rem;
-            box-shadow:0 4px 6px rgba(0,0,0,0.1) }
-    .btn { display:inline-block; padding:.25rem .5rem; border-radius:.375rem;
-           font-weight:600; cursor:pointer; user-select:none }
-    .btn-inc { background:#10b981; color:#fff }
-    .btn-dec { background:#ef4444; color:#fff }
-    .btn-primary { background:#3b82f6; color:#fff }
-    .btn-secondary { background:#64748b; color:#fff }
-    .valor { font-size:1.25rem; font-weight:500; margin: .5rem 0; }
-    /* responsive */
-    #table-wrapper { display:none }
-    #mobile-list  { display:block }
+    body { background: #f0f2f5; font-family: 'Inter', sans-serif; }
+    .card {
+      background: white;
+      border-radius: .75rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06);
+    }
+    .btn { user-select: none; font-weight: 600; cursor: pointer; }
+    .btn-inc { background: #10B981; color: white; }
+    .btn-dec { background: #EF4444; color: white; }
+    .btn-primary { background: #3B82F6; color: white; }
+    .btn-secondary { background: #64748B; color: white; }
+    .valor { font-size: 1.25rem; font-weight: 500; margin: .5rem 0; }
+    .btn-control { min-width: 24px; height: 24px; padding: .1rem; font-size: 1rem; margin: 0 .2rem; }
+    /* Responsivo */
+    #table-wrapper { display: none; }
+    #mobile-list  { display: block; }
     @media(min-width:640px) {
-      #table-wrapper { display:block }
-      #mobile-list  { display:none }
+      #table-wrapper { display: block; }
+      #mobile-list  { display: none; }
     }
   </style>
 </head>
 <body class="p-4">
-  <div class="max-w-xl mx-auto">
+  <div class="max-w-3xl mx-auto">
 
-    <!-- Información del partido -->
+    <!-- Información del Partido -->
     <div class="card">
-      <h2 class="text-xl font-bold mb-4">Información del Partido</h2>
+      <h2 class="text-2xl font-bold mb-4">Información del Partido</h2>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <input id="equipo" placeholder="Equipo Rival" class="p-2 border rounded"/>
-        <input id="set"    placeholder="Set"           class="p-2 border rounded"/>
-        <input id="ganador"placeholder="Ganador Set"   class="p-2 border rounded"/>
+        <input id="equipo"   placeholder="Equipo Rival"    class="p-2 border rounded w-full"/>
+        <input id="set"      placeholder="Set"             class="p-2 border rounded w-full"/>
+        <input id="ganador"  placeholder="Ganador del Set" class="p-2 border rounded w-full"/>
       </div>
     </div>
 
     <!-- Tabla clásica (>=640px) -->
     <div id="table-wrapper" class="card overflow-x-auto">
-      <h2 class="text-xl font-bold mb-4">Tabla de Estadísticas</h2>
-      <!-- ... tu tabla igual que antes ... -->
+      <h2 class="text-2xl font-bold mb-4">Tabla de Estadísticas</h2>
+      <table id="tabla-estadisticas" class="min-w-[800px] table-fixed border-collapse">
+        <thead class="bg-gray-50">
+          <tr>
+            <th rowspan="2" class="p-2 w-1/4">Nombre</th>
+            <th colspan="5" class="p-2">Saque</th>
+            <th colspan="5" class="p-2">Recepción</th>
+            <th colspan="5" class="p-2">Ataque</th>
+          </tr>
+          <tr>
+            <th>0</th><th>.25</th><th>.50</th><th>.75</th><th>1</th>
+            <th>0</th><th>.25</th><th>.50</th><th>.75</th><th>1</th>
+            <th>0</th><th>.25</th><th>.50</th><th>.75</th><th>1</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-jugadores"></tbody>
+      </table>
+      <button onclick="agregarFila()" class="mt-4 btn btn-primary px-4 py-2 rounded">Agregar jugador</button>
     </div>
 
     <!-- Lista móvil (<640px) -->
     <div id="mobile-list">
-      <button onclick="agregarFila()" class="btn btn-primary mb-4">Agregar jugador</button>
+      <button onclick="agregarFila()" class="btn btn-primary mb-4 px-4 py-2 rounded">Agregar jugador</button>
       <div id="mobile-cards" class="space-y-4"></div>
     </div>
 
     <!-- Gráficos -->
     <div class="card">
-      <h2 class="text-xl font-bold mb-4">Estadísticas Individuales (%)</h2>
-      <div id="charts-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+      <h2 class="text-2xl font-bold mb-4">Estadísticas Individuales (Precisión %)</h2>
+      <div id="charts-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </div>
 
     <!-- Acciones -->
     <div class="card flex space-x-4">
-      <button onclick="registrarSet()" class="btn btn-primary">Registrar Set</button>
-      <button onclick="descargarCSV()" class="btn btn-secondary">Descargar CSV</button>
+      <button onclick="registrarSet()" class="btn btn-primary px-4 py-2 rounded">Registrar Set</button>
+      <button onclick="descargarCSV()" class="btn btn-secondary px-4 py-2 rounded">Descargar CSV</button>
     </div>
   </div>
 
   <script>
-    const sets = [], charts = [];
+    const sets = [];
+    const dataVals = [];    // cada elemento es un array de 15 contadores
+    const charts = [];      // instancias Chart.js
 
-    // genera 15 celditas para tabla (igual que antes)…
-    function generarCeldas(i){ /* … */ }
+    function generarCeldas(i){
+      return Array(15).fill(0).map((_,j)=>`
+        <td class="p-1">
+          <div class="flex items-center justify-center">
+            <button class="btn-control bg-red-500 text-white rounded-full"
+                    onclick="modificarTabla(${i}, ${j}, -1)">−</button>
+            <span id="cell-${i}-${j}" class="valor">0</span>
+            <button class="btn-control bg-green-500 text-white rounded-full"
+                    onclick="modificarTabla(${i}, ${j}, +1)">+</button>
+          </div>
+        </td>`).join('');
+    }
 
     function agregarFila(){
-      const i = charts.length;
-      // 1) tabla (igual que antes)… omitido para brevedad
+      const i = dataVals.length;
+      dataVals[i] = Array(15).fill(0);
+      // 1) Fila tabla
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="p-1">
+          <input type="text" placeholder="Jugador ${i+1}" class="w-full border rounded p-1 text-sm"
+                 oninput="renombrar(${i}, this.value)">
+        </td>
+        ${generarCeldas(i)}`;
+      document.getElementById('tbody-jugadores').appendChild(tr);
 
-      // 2) tarjeta móvil
+      // 2) Card móvil
       const card = document.createElement('div');
       card.className = 'card';
       card.id = `mobile-card-${i}`;
       card.innerHTML = `
-        <h3 class="font-bold mb-2" id="mobile-title-${i}">Jugador ${i+1}</h3>
+        <h3 id="mobile-title-${i}" class="font-bold mb-2">Jugador ${i+1}</h3>
         <div class="space-y-4">
-          ${['Saque','Recepción','Ataque'].map((accion,j)=>`
+          ${['Saque','Recepción','Ataque'].map((acc,j)=>{
+            return `
             <div class="border rounded p-2">
-              <p class="text-center font-medium mb-1">${accion}</p>
+              <p class="text-center font-medium mb-1">${acc}</p>
               <div class="flex flex-col items-center">
-                <button class="btn btn-inc" onclick="modificarMobile(${i}, ${j}, 1)">+</button>
+                <button class="btn btn-inc px-2 py-1 rounded"
+                        onclick="modificarMobile(${i}, ${j}, +1)">+</button>
                 <span id="mobile-val-${i}-${j}" class="valor">0%</span>
-                <button class="btn btn-dec" onclick="modificarMobile(${i}, ${j}, -1)">−</button>
+                <button class="btn btn-dec px-2 py-1 rounded"
+                        onclick="modificarMobile(${i}, ${j}, -1)">−</button>
               </div>
-            </div>`).join('')
-        }
+            </div>`  
+          }).join('')}
         </div>`;
-      document.getElementById('mobile-cards').append(card);
+      document.getElementById('mobile-cards').appendChild(card);
 
-      // 3) gráfico (igual que antes)…
+      // 3) Gráfico
       const cont = document.createElement('div');
       cont.className = 'card w-full h-48';
-      cont.innerHTML = `<h3 id="chart-title-${i}" class="text-center font-bold mb-2">Jugador ${i+1}</h3>
-                        <canvas id="chart-${i}" class="w-full h-32"></canvas>`;
-      document.getElementById('charts-grid').append(cont);
+      cont.innerHTML = `
+        <h3 id="chart-title-${i}" class="text-center font-bold mb-2">Jugador ${i+1}</h3>
+        <canvas id="chart-${i}" class="w-full h-32"></canvas>`;
+      document.getElementById('charts-grid').appendChild(cont);
 
-      charts.push(null);
-      inicializarDatos(i);
-      actualizarGrafico(i);
+      charts[i] = null;
+      actualizarVista(i);
     }
 
-    // inicializa un array de 15 ceros para cada jugador
-    function inicializarDatos(i){
-      window[`dataVals${i}`] = Array(15).fill(0);
+    function renombrar(i, nombre){
+      const txt = nombre || `Jugador ${i+1}`;
+      document.getElementById(`chart-title-${i}`).textContent = txt;
+      document.getElementById(`mobile-title-${i}`).textContent = txt;
     }
 
-    // modifica desde móvil: encuentra el slice [j] (0: saque, 1: recep, 2:ataque)
+    function modificarTabla(i, j, delta){
+      const arr = dataVals[i];
+      arr[j] = Math.max(0, arr[j] + delta);
+      document.getElementById(`cell-${i}-${j}`).textContent = arr[j];
+      actualizarVista(i);
+    }
+
     function modificarMobile(i, categoria, delta){
-      // sumamos delta a la categoría: recorremos 5 posiciones de cada bloque
-      const vals = window[`dataVals${i}`];
-      // para simplicidad, añadiremos/substraeremos 1 del primer valor de la categoría
-      // tú puedes ajustar para que ciclen u otro comportamiento
-      const idx = categoria*5; 
-      vals[idx] = Math.max(0, vals[idx] + delta);
-      actualizarMobileUI(i);
-      actualizarGrafico(i);
+      // categoría 0 = Saque (índices 0–4), 1 = Recepción (5–9), 2 = Ataque (10–14)
+      const base = categoria * 5;
+      // aplicamos siempre al bucket 0 de esa categoría para simplicidad
+      dataVals[i][base] = Math.max(0, dataVals[i][base] + delta);
+      // actualizamos la celda correspondiente en la tabla (si está visible)
+      const cell = document.getElementById(`cell-${i}-${base}`);
+      if(cell) cell.textContent = dataVals[i][base];
+      actualizarVista(i);
     }
 
-    function actualizarMobileUI(i){
-      const vals = window[`dataVals${i}`];
-      ['Saque','Recepción','Ataque'].forEach((_,j)=>{
-        const arr = vals.slice(j*5, j*5+5);
-        const total = arr.reduce((a,b)=>a+b,0);
-        const peso = [0,0.25,0.5,0.75,1];
-        const prec = total
-          ? arr.reduce((s,c,k)=>s + c*peso[k],0)/total*100
-          : 0;
-        document.getElementById(`mobile-val-${i}-${j}`)
-                .textContent = prec.toFixed(0) + '%';
+    function actualizarVista(i){
+      const arr = dataVals[i];
+      const pesos = [0, .25, .5, .75, 1];
+      // calcula precisión de cada categoría
+      const precs = [0,1,2].map(cat=>{
+        const slice = arr.slice(cat*5, cat*5+5);
+        const total = slice.reduce((a,b)=>a+b,0);
+        if(!total) return 0;
+        const suma = slice.reduce((s,c,k)=> s + c*pesos[k], 0);
+        return (suma/total)*100;
       });
+      // actualiza vista móvil
+      precs.forEach((p,cat)=>{
+        document.getElementById(`mobile-val-${i}-${cat}`).textContent = p.toFixed(0) + '%';
+      });
+      // actualiza gráfico
+      const ctx = document.getElementById(`chart-${i}`).getContext('2d');
+      const data = {
+        labels: ['Saque','Recepción','Ataque'],
+        datasets:[{label:'Precisión %', data: precs}]
+      };
+      const opts = {
+        responsive:true,
+        maintainAspectRatio:false,
+        scales:{ y:{ beginAtZero:true, max:100, ticks:{stepSize:25, callback:v=>v+'%'} } },
+        plugins:{ legend:{display:true}, tooltip:{callbacks:{label(ctx){return ctx.parsed.y.toFixed(1)+'%';}}}}
+      };
+      if(charts[i]) charts[i].destroy();
+      charts[i] = new Chart(ctx,{type:'bar', data, options:opts});
     }
 
-    function actualizarGrafico(i){
-      // similar a tu función anterior, pero leyendo window[`dataVals${i}`]
-      // … recrea el bar chart y lo coloca o actualiza en charts[i]
+    function registrarSet(){
+      const equipo  = document.getElementById('equipo').value.trim()   || 'equipo';
+      const setN    = document.getElementById('set').value.trim()      || 'sin_set';
+      const ganador = document.getElementById('ganador').value.trim();
+      if(!ganador) return alert('Indica ganador del set');
+      if(!dataVals.length) return alert('Agrega al menos un jugador');
+      const contenido = [`Set: ${setN} | Ganador: ${ganador}`,
+                         'Nombre,' + Array.from({length:15},(_,j)=>(j<5?'S0,':j<10?'R0,':'A0,')).join('').slice(0,-1)];
+      dataVals.forEach((arr,i)=>{
+        const nombre = document.querySelectorAll('#tbody-jugadores input')[i].value.trim() || `Jugador ${i+1}`;
+        contenido.push(nombre + ',' + arr.join(','));
+      });
+      sets.push({ equipo, contenido });
+      alert(`Set ${setN} registrado`);
     }
 
-    function registrarSet(){ /* … */ }
-    function descargarCSV(){ /* … */ }
+    function descargarCSV(){
+      if(!sets.length) return alert('No hay sets registrados');
+      const equipo = document.getElementById('equipo').value.trim() || 'estadisticas';
+      let txt = `Estadísticas para el equipo: ${equipo}\n\n`;
+      sets.forEach(s=>{
+        txt += s.contenido.join('\n') + '\n\n---------------------\n\n';
+      });
+      const blob = new Blob([txt],{type:'text/csv'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${equipo.replace(/\s+/g,'_').toLowerCase()}_stats.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
 
-    window.onload = agregarFila;
+    window.onload = () => agregarFila();
   </script>
 </body>
 </html>
