@@ -45,6 +45,13 @@
       font-weight: 600;
       color: #475569;
     }
+    /* Líneas gruesas para separar secciones */
+    #tabla-estadisticas th:nth-child(6),
+    #tabla-estadisticas td:nth-child(6),
+    #tabla-estadisticas th:nth-child(11),
+    #tabla-estadisticas td:nth-child(11) {
+      border-left: 3px solid #475569;
+    }
     input[type="text"] {
       padding: 0.5rem 0.75rem;
       border: 1px solid #cbd5e1;
@@ -80,10 +87,10 @@
       background-color: #475569;
     }
     .btn-control {
-      min-width: 24px;
-      height: 24px;
+      min-width: 20px;
+      height: 20px;
       padding: 0.1rem;
-      font-size: 1rem;
+      font-size: 0.875rem;
       line-height: 1;
     }
     .valor {
@@ -92,14 +99,14 @@
       font-weight: 500;
       font-size: 1rem;
     }
-    /* Nueva clase para botones en columna */
+    /* Botones en columna */
     .control-group {
       display: flex;
       flex-direction: column;
       align-items: center;
     }
     .control-group .btn-control {
-      margin: 0.25rem 0;
+      margin: 0.15rem 0;
     }
     #stats-container {
       margin-top: 2rem;
@@ -136,7 +143,7 @@
         <table id="tabla-estadisticas">
           <thead class="bg-gray-50">
             <tr>
-              <th rowspan="2" style="width: 20%;">Nombre</th>
+              <th rowspan="2" style="width:20%">Nombre</th>
               <th colspan="5">Saque</th>
               <th colspan="5">Recepción</th>
               <th colspan="5">Ataque</th>
@@ -148,7 +155,7 @@
             </tr>
           </thead>
           <tbody id="tbody-jugadores">
-            <!-- Las filas de los jugadores se generan con JavaScript -->
+            <!-- Filas generadas por JS -->
           </tbody>
         </table>
       </div>
@@ -160,7 +167,7 @@
     <div id="stats-container">
       <h2 class="text-2xl font-bold text-gray-800 mb-4">Estadísticas Individuales (Precisión %)</h2>
       <div id="charts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Los gráficos de los jugadores se insertan aquí -->
+        <!-- Gráficos -->
       </div>
     </div>
 
@@ -198,7 +205,6 @@
       const tbody = document.getElementById("tbody-jugadores");
       const rowIndex = tbody.rows.length;
       const fila = document.createElement("tr");
-
       fila.innerHTML = `
         <td>
           <input type="text" placeholder="Nombre Jugador"
@@ -226,15 +232,12 @@
 
     function actualizarNombreGrafico(rowIndex, nombre) {
       const chartTitle = document.getElementById(`chart-title-${rowIndex}`);
-      if (chartTitle) {
-        chartTitle.textContent = nombre || `Jugador ${rowIndex + 1}`;
-      }
+      if (chartTitle) chartTitle.textContent = nombre || `Jugador ${rowIndex + 1}`;
     }
 
     function actualizarValor(boton, cambio, rowIndex) {
       const valorSpan = boton.parentNode.querySelector('.valor');
-      let valor = parseInt(valorSpan.textContent);
-      valor += cambio;
+      let valor = parseInt(valorSpan.textContent) + cambio;
       if (valor < 0) valor = 0;
       valorSpan.textContent = valor;
       crearOActualizarGrafico(rowIndex);
@@ -243,83 +246,39 @@
     function crearOActualizarGrafico(rowIndex) {
       const fila = document.getElementById("tbody-jugadores").rows[rowIndex];
       if (!fila) return;
-
       const valores = [...fila.querySelectorAll('.valor')].map(v => parseInt(v.textContent));
-      const actionWeights = [0, 0.25, 0.50, 0.75, 1];
-
-      function calculatePrecision(actionValues) {
-        const totalActions = actionValues.reduce((sum, count) => sum + count, 0);
-        if (totalActions === 0) return 0;
-        const weightedSum = actionValues.reduce((sum, count, idx) =>
-          sum + (count * actionWeights[idx]), 0);
-        return (weightedSum / totalActions) * 100;
-      }
-
-      const precisionSaque = calculatePrecision(valores.slice(0, 5));
-      const precisionRecepcion = calculatePrecision(valores.slice(5, 10));
-      const precisionAtaque = calculatePrecision(valores.slice(10, 15));
-
+      const pesos = [0, .25, .5, .75, 1];
+      const calc = arr => {
+        const total = arr.reduce((s,c)=>s+c,0);
+        return total
+          ? (arr.reduce((s,c,i)=>s + c*pesos[i],0) / total)*100
+          : 0;
+      };
       const data = {
-        labels: ['Saque', 'Recepción', 'Ataque'],
-        datasets: [{
+        labels: ['Saque','Recepción','Ataque'],
+        datasets:[{
           label: 'Precisión (%)',
-          data: [precisionSaque, precisionRecepcion, precisionAtaque],
-          backgroundColor: [
-            'rgba(59, 130, 246, 0.7)',
-            'rgba(16, 185, 129, 0.7)',
-            'rgba(239, 68, 68, 0.7)'
-          ],
-          borderColor: [
-            'rgb(59, 130, 246)',
-            'rgb(16, 185, 129)',
-            'rgb(239, 68, 68)'
-          ],
-          borderWidth: 1
+          data: [calc(valores.slice(0,5)),calc(valores.slice(5,10)),calc(valores.slice(10,15))],
+          backgroundColor: ['rgba(59,130,246,0.7)','rgba(16,185,129,0.7)','rgba(239,68,68,0.7)'],
+          borderColor: ['rgb(59,130,246)','rgb(16,185,129)','rgb(239,68,68)'],
+          borderWidth:1
         }]
       };
-
       const ctx = document.getElementById(`player-chart-${rowIndex}`).getContext('2d');
-
-      const chartOptions = {
-        scales: {
-          y: {
-            beginAtZero: true,
-            min: 0,
-            max: 100,
-            ticks: {
-              stepSize: 25,
-              callback: value => value + '%'
-            }
-          }
-        },
-        responsive: true,
-        maintainAspectRatio: true,
-        plugins: {
-          legend: { display: true, position: 'top' },
-          tooltip: {
-            callbacks: {
-              label: ctx => {
-                let lbl = ctx.dataset.label ? ctx.dataset.label + ': ' : '';
-                if (ctx.parsed.y !== null) {
-                  lbl += ctx.parsed.y.toFixed(2) + '%';
-                }
-                return lbl;
-              }
-            }
-          }
+      const opts = {
+        scales:{ y:{ beginAtZero:true, min:0, max:100, ticks:{ stepSize:25, callback:v=>v+'%' }}},
+        responsive:true, maintainAspectRatio:true,
+        plugins:{
+          legend:{ display:true, position:'top' },
+          tooltip:{ callbacks:{ label(ctx){ return `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)}%`; } } }
         }
       };
-
       if (playerCharts[rowIndex]) {
         playerCharts[rowIndex].data = data;
-        playerCharts[rowIndex].options = chartOptions;
+        playerCharts[rowIndex].options = opts;
         playerCharts[rowIndex].update();
       } else {
-        playerCharts[rowIndex] = new Chart(ctx, {
-          type: 'bar',
-          data,
-          options: chartOptions
-        });
+        playerCharts[rowIndex] = new Chart(ctx,{ type:'bar', data, options:opts });
       }
     }
 
@@ -327,26 +286,17 @@
       const equipo = document.getElementById("equipo").value.trim() || "equipo";
       const set = document.getElementById("set").value.trim() || "sin_set";
       const ganador = document.getElementById("ganador").value.trim();
-      if (!equipo || !set || !ganador) {
-        alert("Por favor, complete los campos de Equipo, Set y Ganador.");
-        return;
-      }
+      if (!ganador) return alert("Complete Equipo, Set y Ganador.");
       const filas = document.querySelectorAll('#tbody-jugadores tr');
-      if (filas.length === 0) {
-        alert("Agregue al menos un jugador para registrar el set.");
-        return;
-      }
-      const datosSet = [
-        `Set: ${set} | Ganador: ${ganador}`,
-        "Nombre,S0,S.25,S.50,S.75,S1,R0,R.25,R.50,R.75,R1,A0,A.25,A.50,A.75,A1"
-      ];
-      filas.forEach(fila => {
-        const nombre = fila.querySelector('input').value.trim() || 'Jugador Anónimo';
-        const valores = [...fila.querySelectorAll('.valor')].map(v => v.textContent);
-        datosSet.push(`${nombre},${valores.join(',')}`);
+      if (!filas.length) return alert("Agregue al menos un jugador.");
+      const datos = [`Set: ${set} | Ganador: ${ganador}`, "Nombre,S0,S.25,S.50,S.75,S1,R0,R.25,R.50,R.75,R1,A0,A.25,A.50,A.75,A1"];
+      filas.forEach(f=>{
+        const nombre = f.querySelector('input').value.trim()||'Jugador Anónimo';
+        const vals = [...f.querySelectorAll('.valor')].map(v=>v.textContent);
+        datos.push(`${nombre},${vals.join(',')}`);
       });
-      setsRegistrados.push({ equipo, contenido: datosSet });
-      alert(`Set ${set} registrado exitosamente.`);
+      setsRegistrados.push({ equipo, contenido: datos });
+      alert(`Set ${set} registrado.`);
       limpiarParaNuevoSet();
     }
 
@@ -360,28 +310,22 @@
     }
 
     function descargarCSV() {
-      if (setsRegistrados.length === 0) {
-        alert("No hay sets registrados para descargar.");
-        return;
-      }
-      const equipo = document.getElementById("equipo").value.trim() || "estadisticas";
-      let contenido = `Estadísticas para el equipo: ${equipo}\n\n`;
-      setsRegistrados.forEach((set) => {
-        contenido += `${set.contenido.join('\n')}\n\n-------------------------\n\n`;
-      });
-      const blob = new Blob([contenido], { type: 'text/csv;charset=utf-8;' });
+      if (!setsRegistrados.length) return alert("No hay sets registrados.");
+      const nombre = (document.getElementById("equipo").value.trim() || "estadisticas")
+                       .replace(/\s+/g,'_').toLowerCase();
+      let texto = `Estadísticas para el equipo: ${nombre}\n\n`;
+      setsRegistrados.forEach(s=> { texto += s.contenido.join('\n') + '\n\n----\n\n'; });
+      const blob = new Blob([texto],{ type:'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", `${equipo.replace(/\s+/g, "_").toLowerCase()}_estadisticas.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${nombre}_estadisticas.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     }
 
-    window.onload = function() {
-      agregarFila();
-    };
+    window.onload = agregarFila;
   </script>
 </body>
 </html>
