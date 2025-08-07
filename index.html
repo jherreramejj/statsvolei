@@ -8,112 +8,45 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f0f2f5;
-    }
-    .card {
-      background-color: white;
-      border-radius: 0.75rem;
-      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1.5rem;
-      background-color: white;
-      box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-      table-layout: fixed;
-    }
-    th, td {
-      border: 1px solid #e2e8f0;
-      padding: 0.5rem 0.25rem;
-      text-align: center;
-      vertical-align: middle;
-      font-size: 0.875rem;
-    }
-    th {
-      background-color: #f8fafc;
-      font-weight: 600;
-      color: #475569;
-    }
-    input[type="text"] {
-      padding: 0.5rem 0.75rem;
-      border: 1px solid #cbd5e1;
-      border-radius: 0.375rem;
-      width: 100%;
-      transition: border-color 0.2s;
-    }
-    input[type="text"]:focus {
-      outline: none;
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 1px #3b82f6;
-    }
-    .btn-primary {
-      background-color: #3b82f6;
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 0.375rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .btn-secondary {
-      background-color: #64748b;
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 0.375rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .btn-control {
-      min-width: 20px;
-      height: 20px;
-      padding: 0.1rem;
-      font-size: 0.875rem;
-      line-height: 1;
-    }
-    .valor {
-      display: inline-block;
-      width: 25px;
-      font-weight: 500;
-      font-size: 1rem;
-    }
-    .control-group {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .control-group .btn-control {
-      margin: 0.15rem 0;
-    }
-    #stats-container {
-      margin-top: 2rem;
-    }
+    body { font-family: 'Inter', sans-serif; background-color: #f0f2f5; }
+    .card { background: white; border-radius: .75rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -2px rgba(0,0,0,.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; background: white; box-shadow: 0 1px 3px rgba(0,0,0,.1); table-layout: fixed; }
+    th, td { border: 1px solid #e2e8f0; padding: .5rem .25rem; text-align: center; vertical-align: middle; font-size: .875rem; }
+    th { background: #f8fafc; font-weight: 600; color: #475569; }
+    input[type="text"] { padding: .5rem .75rem; border: 1px solid #cbd5e1; border-radius: .375rem; width: 100%; transition: border-color .2s; }
+    input[type="text"]:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 1px #3b82f6; }
+    .btn-primary { background: #3b82f6; color: white; padding: .5rem 1rem; border-radius: .375rem; font-weight: 600; cursor: pointer; }
+    .btn-secondary { background: #64748b; color: white; padding: .5rem 1rem; border-radius: .375rem; font-weight: 600; cursor: pointer; }
+    .btn-control { min-width: 20px; height: 20px; padding: .1rem; font-size: .875rem; line-height: 1; }
+    .valor { display: inline-block; width: 25px; font-weight: 500; font-size: 1rem; }
+    .control-group { display: flex; flex-direction: column; align-items: center; }
+    .control-group .btn-control { margin: .15rem 0; }
+    #sets-previos-card.hidden { display: none; }
   </style>
 </head>
 <body class="p-4 md:p-8">
-
   <div class="max-w-7xl mx-auto">
+
+    <!-- Información del partido -->
     <div class="card">
       <h2 class="text-2xl font-bold text-gray-800 mb-4">Información del Partido</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <label for="equipo" class="block text-sm font-medium text-gray-700">Equipo Rival</label>
-          <input type="text" id="equipo" class="mt-1" />
+          <input type="text" id="equipo" class="mt-1" oninput="guardarEstadoActual()" />
         </div>
         <div>
           <label for="set" class="block text-sm font-medium text-gray-700">Set</label>
-          <input type="text" id="set" class="mt-1" />
+          <input type="text" id="set" class="mt-1" oninput="guardarEstadoActual()" />
         </div>
         <div>
           <label for="ganador" class="block text-sm font-medium text-gray-700">Ganador del Set</label>
-          <input type="text" id="ganador" class="mt-1" />
+          <input type="text" id="ganador" class="mt-1" oninput="guardarEstadoActual()" />
         </div>
       </div>
     </div>
 
+    <!-- Tabla de jugadores -->
     <div class="card">
       <h2 class="text-2xl font-bold text-gray-800 mb-4">Tabla de Estadísticas</h2>
       <div class="overflow-x-auto">
@@ -131,9 +64,7 @@
               <th style="border-left:3px solid #475569;">0</th><th>.25</th><th>.50</th><th>.75</th><th>1</th>
             </tr>
           </thead>
-          <tbody id="tbody-jugadores">
-            <!-- Se llenará con JS -->
-          </tbody>
+          <tbody id="tbody-jugadores"></tbody>
         </table>
       </div>
       <div class="mt-4">
@@ -141,181 +72,273 @@
       </div>
     </div>
 
+    <!-- Gráficas -->
     <div id="stats-container">
       <h2 class="text-2xl font-bold text-gray-800 mb-4">Estadísticas Individuales (Precisión %)</h2>
-      <div id="charts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Gráficos generados por JS -->
-      </div>
+      <div id="charts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </div>
 
+    <!-- Acciones -->
     <div class="card mt-6">
       <h2 class="text-2xl font-bold text-gray-800 mb-4">Acciones</h2>
       <div class="flex space-x-4">
         <button onclick="registrarSet()" class="btn-primary">Registrar Set</button>
         <button onclick="descargarCSV()" class="btn-secondary">Descargar CSV</button>
+        <button onclick="mostrarSets()" class="btn-secondary">Ver sets anteriores</button>
+        <button onclick="nuevoPartido()" class="btn-secondary">Nuevo Partido</button>
       </div>
     </div>
+
+    <!-- Sección Sets Anteriores -->
+    <div id="sets-previos-card" class="card hidden">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">Sets Anteriores</h2>
+      <div id="sets-previos-list" class="space-y-4 max-h-96 overflow-y-auto"></div>
+      <div class="mt-4">
+        <button onclick="cerrarSets()" class="btn-secondary">Cerrar</button>
+      </div>
+    </div>
+
   </div>
 
   <script>
-    const setsRegistrados = [];
+    let setsRegistrados = [];
     let playerCharts = [];
 
+    // Guarda/Carga sets en localStorage
+    function guardarSets() {
+      localStorage.setItem('setsRegistrados', JSON.stringify(setsRegistrados));
+    }
+    function cargarSets() {
+      setsRegistrados = JSON.parse(localStorage.getItem('setsRegistrados') || '[]');
+    }
+
+    // Guarda/Carga estado actual (inputs, tabla, gráficas)
+    function guardarEstadoActual() {
+      const eq = document.getElementById('equipo').value;
+      const setV = document.getElementById('set').value;
+      const gan = document.getElementById('ganador').value;
+      const filas = Array.from(document.querySelectorAll('#tbody-jugadores tr')).map((f, i) => ({
+        nombre: f.querySelector('input').value,
+        valores: Array.from(f.querySelectorAll('.valor')).map(s => s.textContent)
+      }));
+      localStorage.setItem('estadoActual', JSON.stringify({ eq, set: setV, gan, filas }));
+    }
+    function cargarEstadoActual() {
+      const estado = JSON.parse(localStorage.getItem('estadoActual') || 'null');
+      if (!estado) {
+        agregarFila();
+        return;
+      }
+      document.getElementById('equipo').value = estado.eq;
+      document.getElementById('set').value = estado.set;
+      document.getElementById('ganador').value = estado.gan;
+      document.getElementById('tbody-jugadores').innerHTML = '';
+      document.getElementById('charts-grid').innerHTML = '';
+      playerCharts = [];
+      estado.filas.forEach((row, idx) => {
+        const tbody = document.getElementById('tbody-jugadores');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <input type="text" value="${row.nombre.replace(/"/g,'&quot;')}"
+                   placeholder="Nombre Jugador"
+                   oninput="actualizarNombreGrafico(${idx}, this.value); guardarEstadoActual();" />
+          </td>
+          ${generarCeldas(idx)}
+        `;
+        tbody.appendChild(tr);
+        const cont = document.createElement('div');
+        cont.className = 'player-stats-card card';
+        cont.id = `chart-container-${idx}`;
+        cont.innerHTML = `
+          <h3 id="chart-title-${idx}" class="text-lg font-bold text-center mb-2">
+            ${row.nombre || `Jugador ${idx+1}`}
+          </h3>
+          <canvas id="player-chart-${idx}"></canvas>
+        `;
+        document.getElementById('charts-grid').appendChild(cont);
+        tr.querySelectorAll('.valor').forEach((span, i) => span.textContent = row.valores[i] || '0');
+        crearOActualizarGrafico(idx);
+      });
+    }
+
+    // Genera las celdas con controles para cada estadística
     function generarCeldas(rowIndex) {
-      let celdas = '';
+      let html = '';
       for (let i = 0; i < 15; i++) {
-        // si i==5 o i==10, ponemos línea a la izquierda
-        const style = (i === 5 || i === 10)
-          ? 'style="border-left:3px solid #475569;"'
-          : '';
-        celdas += `
+        const style = (i === 5 || i === 10) ? 'style="border-left:3px solid #475569;"' : '';
+        html += `
           <td ${style}>
             <div class="control-group">
               <button class="btn-control bg-green-500 text-white rounded-full"
-                      onclick="actualizarValor(this, 1, ${rowIndex})">+</button>
+                      onclick="actualizarValor(this,1,${rowIndex}); guardarEstadoActual();">+</button>
               <span class="valor">0</span>
               <button class="btn-control bg-red-500 text-white rounded-full"
-                      onclick="actualizarValor(this, -1, ${rowIndex})">–</button>
+                      onclick="actualizarValor(this,-1,${rowIndex}); guardarEstadoActual();">–</button>
             </div>
           </td>`;
       }
-      return celdas;
+      return html;
     }
 
     function agregarFila() {
-      const tbody = document.getElementById("tbody-jugadores");
-      const rowIndex = tbody.rows.length;
-      const fila = document.createElement("tr");
-      fila.innerHTML = `
+      const idx = document.querySelectorAll('#tbody-jugadores tr').length;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
         <td>
           <input type="text" placeholder="Nombre Jugador"
-                 oninput="actualizarNombreGrafico(${rowIndex}, this.value)" />
+                 oninput="actualizarNombreGrafico(${idx}, this.value); guardarEstadoActual();" />
         </td>
-        ${generarCeldas(rowIndex)}
+        ${generarCeldas(idx)}
       `;
-      tbody.appendChild(fila);
+      document.getElementById('tbody-jugadores').appendChild(tr);
 
-      // también marcamos la separación en el header dinámico de gráficas
-      const chartsGrid = document.getElementById("charts-grid");
-      const chartContainer = document.createElement("div");
-      chartContainer.className = "player-stats-card card";
-      chartContainer.id = `chart-container-${rowIndex}`;
-      chartContainer.innerHTML = `
-        <h3 id="chart-title-${rowIndex}" class="text-lg font-bold text-center mb-2">
-          Jugador ${rowIndex + 1}
+      const cont = document.createElement('div');
+      cont.className = 'player-stats-card card';
+      cont.id = `chart-container-${idx}`;
+      cont.innerHTML = `
+        <h3 id="chart-title-${idx}" class="text-lg font-bold text-center mb-2">
+          Jugador ${idx+1}
         </h3>
-        <canvas id="player-chart-${rowIndex}"></canvas>
+        <canvas id="player-chart-${idx}"></canvas>
       `;
-      chartsGrid.appendChild(chartContainer);
+      document.getElementById('charts-grid').appendChild(cont);
 
-      crearOActualizarGrafico(rowIndex);
+      crearOActualizarGrafico(idx);
+      guardarEstadoActual();
     }
 
-    function actualizarNombreGrafico(rowIndex, nombre) {
-      const titulo = document.getElementById(`chart-title-${rowIndex}`);
-      if (titulo) titulo.textContent = nombre || `Jugador ${rowIndex + 1}`;
+    function actualizarNombreGrafico(i, nombre) {
+      const t = document.getElementById(`chart-title-${i}`);
+      if (t) t.textContent = nombre || `Jugador ${i+1}`;
     }
 
-    function actualizarValor(btn, delta, rowIndex) {
+    function actualizarValor(btn, delta, i) {
       const span = btn.parentNode.querySelector('.valor');
       let v = parseInt(span.textContent) + delta;
       if (v < 0) v = 0;
       span.textContent = v;
-      crearOActualizarGrafico(rowIndex);
+      crearOActualizarGrafico(i);
     }
 
-    function crearOActualizarGrafico(idx) {
-      const fila = document.getElementById("tbody-jugadores").rows[idx];
+    function crearOActualizarGrafico(i) {
+      const fila = document.getElementById('tbody-jugadores').rows[i];
       if (!fila) return;
       const vals = [...fila.querySelectorAll('.valor')].map(x=>+x.textContent);
-      const pesos = [0, .25, .5, .75, 1];
+      const pesos = [0,.25,.5,.75,1];
       const calc = arr => {
         const tot = arr.reduce((a,b)=>a+b,0);
-        if (!tot) return 0;
-        return (arr.reduce((s,c,i)=>s + c*pesos[i],0)/tot)*100;
+        return tot ? (arr.reduce((s,c,j)=>s + c*pesos[j],0)/tot)*100 : 0;
       };
       const data = {
         labels:['Saque','Recepción','Ataque'],
-        datasets:[{
-          label:'Precisión (%)',
-          data:[
-            calc(vals.slice(0,5)),
-            calc(vals.slice(5,10)),
-            calc(vals.slice(10,15))
-          ],
-          backgroundColor:[
-            'rgba(59,130,246,0.7)',
-            'rgba(16,185,129,0.7)',
-            'rgba(239,68,68,0.7)'
-          ],
-          borderColor:[
-            'rgb(59,130,246)',
-            'rgb(16,185,129)',
-            'rgb(239,68,68)'
-          ],
-          borderWidth:1
-        }]
+        datasets:[{ label:'Precisión (%)',
+          data:[calc(vals.slice(0,5)),calc(vals.slice(5,10)),calc(vals.slice(10,15))],
+          backgroundColor:['rgba(59,130,246,0.7)','rgba(16,185,129,0.7)','rgba(239,68,68,0.7)'],
+          borderColor:['rgb(59,130,246)','rgb(16,185,129)','rgb(239,68,68)'], borderWidth:1 }]
       };
-      const ctx = document.getElementById(`player-chart-${idx}`).getContext('2d');
+      const ctx = document.getElementById(`player-chart-${i}`).getContext('2d');
       const opts = {
-        scales:{ y:{ beginAtZero:true, min:0, max:100, ticks:{ stepSize:25, callback:v=>v+'%' }}},
+        scales:{ y:{ beginAtZero:true, min:0, max:100, ticks:{ stepSize:25, callback:v=>v+'%' } } },
         responsive:true, maintainAspectRatio:true,
-        plugins:{
-          legend:{ display:true, position:'top'},
-          tooltip:{ callbacks:{ label(ctx){ return `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)}%`; }}}
-        }
+        plugins:{ legend:{ display:true, position:'top' } }
       };
-      if (playerCharts[idx]) {
-        playerCharts[idx].data = data;
-        playerCharts[idx].options = opts;
-        playerCharts[idx].update();
+      if (playerCharts[i]) {
+        playerCharts[i].data = data; playerCharts[i].options = opts; playerCharts[i].update();
       } else {
-        playerCharts[idx] = new Chart(ctx, { type:'bar', data, options:opts });
+        playerCharts[i] = new Chart(ctx,{ type:'bar', data, options:opts });
       }
     }
 
     function registrarSet() {
-      const eq = document.getElementById("equipo").value.trim()||'equipo';
-      const set = document.getElementById("set").value.trim()||'sin_set';
-      const gan = document.getElementById("ganador").value.trim();
-      if (!gan) return alert("Complete Equipo, Set y Ganador.");
+      const eq = document.getElementById('equipo').value.trim() || 'equipo';
+      const setV = document.getElementById('set').value.trim() || 'sin_set';
+      const gan = document.getElementById('ganador').value.trim();
+      if (!gan) return alert('Complete Equipo, Set y Ganador.');
       const filas = document.querySelectorAll('#tbody-jugadores tr');
-      if (!filas.length) return alert("Agregue al menos un jugador.");
-      const datos = [`Set: ${set} | Ganador: ${gan}`,
-                     "Nombre,S0,S.25,S.50,S.75,S1,R0,R.25,R.50,R.75,R1,A0,A.25,A.50,A.75,A1"];
-      filas.forEach(f=>{
-        const nom = f.querySelector('input').value.trim()||'Jugador Anónimo';
+      if (!filas.length) return alert('Agregue al menos un jugador.');
+      const contenido = [
+        `Set: ${setV} | Ganador: ${gan}`,
+        'Nombre,S0,S.25,S.50,S.75,S1,R0,R.25,R.50,R.75,R1,A0,A.25,A.50,A.75,A1'
+      ];
+      filas.forEach(f => {
+        const nom = f.querySelector('input').value.trim() || 'Jugador Anónimo';
         const vs = [...f.querySelectorAll('.valor')].map(z=>z.textContent);
-        datos.push(`${nom},${vs.join(',')}`);
+        contenido.push(`${nom},${vs.join(',')}`);
       });
-      setsRegistrados.push({ equipo: eq, contenido: datos });
-      alert(`Set ${set} registrado.`);
+      setsRegistrados.push({ equipo: eq, contenido });
+      guardarSets();
+      alert(`Set ${setV} registrado.`);
       limpiarParaNuevoSet();
     }
 
     function limpiarParaNuevoSet() {
-      document.getElementById("set").value = '';
-      document.getElementById("ganador").value = '';
-      document.getElementById("tbody-jugadores").innerHTML = '';
-      document.getElementById("charts-grid").innerHTML = '';
+      localStorage.removeItem('estadoActual');
+      document.getElementById('set').value = '';
+      document.getElementById('ganador').value = '';
+      document.getElementById('tbody-jugadores').innerHTML = '';
+      document.getElementById('charts-grid').innerHTML = '';
       playerCharts = [];
       agregarFila();
     }
 
     function descargarCSV() {
-      if (!setsRegistrados.length) return alert("No hay sets registrados.");
-      const eq = (document.getElementById("equipo").value.trim()||'estadisticas')
+      if (!setsRegistrados.length) return alert('No hay sets registrados.');
+      const eq = (document.getElementById('equipo').value.trim() || 'estadisticas')
                  .replace(/\s+/g,'_').toLowerCase();
-      let txt = `Estadísticas para el equipo: ${eq}\n\n`;
-      setsRegistrados.forEach(s=> txt += s.contenido.join('\n') + '\n\n----\n\n');
-      const blob = new Blob([txt],{ type:'text/csv;charset=utf-8;' });
+      let txt = `Estadísticas para: ${eq}\n\n`;
+      setsRegistrados.forEach(s => {
+        txt += s.contenido.join('\n') + '\n\n----\n\n';
+      });
+      const blob = new Blob([txt], { type:'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url; a.download = `${eq}_estadisticas.csv`;
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
     }
 
-    window.onload = agregarFila;
+    function mostrarSets() {
+      const cont = document.getElementById('sets-previos-list');
+      cont.innerHTML = '';
+      if (!setsRegistrados.length) {
+        cont.textContent = 'No hay sets registrados.';
+      } else {
+        setsRegistrados.forEach((s, i) => {
+          const d = document.createElement('div');
+          d.innerHTML = `
+            <h3 class="font-semibold">#${i+1} — Equipo: ${s.equipo}</h3>
+            <pre class="bg-gray-100 p-2 rounded">${s.contenido.join('\n')}</pre>
+          `;
+          cont.appendChild(d);
+        });
+      }
+      document.getElementById('sets-previos-card').classList.remove('hidden');
+    }
+    function cerrarSets() {
+      document.getElementById('sets-previos-card').classList.add('hidden');
+    }
+
+    // Nuevo Partido: borra todo y arranca de cero
+    function nuevoPartido() {
+      if (!confirm('¿Seguro que quieres comenzar un nuevo partido y borrar todo?')) return;
+      localStorage.removeItem('estadoActual');
+      localStorage.removeItem('setsRegistrados');
+      setsRegistrados = [];
+      playerCharts = [];
+      document.getElementById('equipo').value = '';
+      document.getElementById('set').value = '';
+      document.getElementById('ganador').value = '';
+      document.getElementById('tbody-jugadores').innerHTML = '';
+      document.getElementById('charts-grid').innerHTML = '';
+      document.getElementById('sets-previos-card').classList.add('hidden');
+      agregarFila();
+    }
+
+    // Al cargar
+    window.onload = () => {
+      cargarSets();
+      cargarEstadoActual();
+    };
   </script>
 </body>
 </html>
